@@ -27,20 +27,20 @@ sub cmd_adios {
       return;
     }
 
-    my @oldnickmatch = $server->{nick} =~ /^zz_(.*)$/;
+    $server->{nick} =~ /^zz_(.*)$/;
 
     if ($data) {
       # Set as away
       $server->command("AWAY $data");
 
       # Change the nick to zz_ if it doesn't already have it
-      if (length(@oldnickmatch[0]) == 0) {
+      unless ($1) {
         $server->command("NICK zz_" . $server->{nick});
       }
     } else {
       # If the nick starts with zz_, change back to the original nick
-      if (length(@oldnickmatch[0]) > 0) {
-        $server->command("NICK " . @oldnickmatch[0]);
+      if ($1) {
+        $server->command("NICK " . $1);
       }
 
       # Mark as not away
